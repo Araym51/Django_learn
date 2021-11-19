@@ -1,5 +1,5 @@
 {% extends 'mainapp/base.html' %}
-
+{% load static %}
 {% block css %}
 <link href="/static/css/products.css" rel="stylesheet">
 {% endblock %}
@@ -54,20 +54,20 @@
             </div>
 
             <div class="row">
-            {% for products in product %}
+            {% for item in product %}
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="card h-100">
                         <a href="#">
                             <img class="card-img-top"
-                                 src="{{ products.image }}"
+                                 src="{% static item.image %}"
                                  alt="">
                         </a>
                         <div class="card-body">
                             <h4 class="card-title">
-                                <a href="#">{{ products.name }}</a>
+                                <a href="#">{{ item.name }}</a>
                             </h4>
-                            <h5>{{ products.price }}</h5>
-                            <p class="card-text">{{ products.description }}</p>
+                            <h5>{{ item.price }}</h5>
+                            <p class="card-text">{{ item.description }}</p>
                         </div>
                         <div class="card-footer text-center">
                             <button type="button" class="btn btn-outline-success">Отправить в корзину</button>
