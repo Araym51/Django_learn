@@ -22,9 +22,8 @@ from mainapp.views import index, products
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index, name='index'),
-    path('products/', products, name='products')  # здесь беда при попытке подключения urls
-    # path('products/', include('mainapp.urls', namespace='products')) <-- это у меня не работает T_T
+    path('', index,name='index'),
+    path('products/', include('mainapp.urls',namespace='mainapp')),
 ]
 
 
