@@ -17,7 +17,7 @@ def index(request):
 
 def products(request):
     context = {
-        'title': 'Geekshop - каталог',
+        'title': 'Geekshop | каталог',
     }
     context['product'] = Product.objects.all()
     context['categories'] = ProductCategory.objects.all()
