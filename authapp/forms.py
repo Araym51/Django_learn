@@ -1,4 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.core.exceptions import ValidationError
+
 from authapp.models import User
 
 class UserLoginForm(AuthenticationForm):
@@ -31,3 +33,10 @@ class UserRegisterForm(UserCreationForm):
         self.fields['password2'].widget.attrs['placeholder'] = 'Повторите пароль'
         for field_name , field in self.fields.items():
             field.widget.attrs['class'] = 'form-control py-4'
+
+    def validate (self):
+        first_name = self.cleaned_data['first_name']
+        last_name = self.cleaned_data['last_name']
+        if not first_name.isalpha() and not last_name.isalpha():
+            raise ValidationError('Имя и фамилия не должны содержать цифр')
+        return first_name, last_name
