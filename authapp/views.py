@@ -1,7 +1,7 @@
 from django.contrib import auth, messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from authapp.forms import UserLoginForm, UserRegisterForm
+from authapp.forms import UserLoginForm, UserRegisterForm, UserProfileForm
 from django.urls import reverse
 # Create your views here.
 
@@ -46,6 +46,15 @@ def register(request):
     return render(request, 'authapp/register.html', context)
 
 
+def profile(request):
+
+    context = {
+        'title': 'Geekshop | profile',
+        'form': UserProfileForm(instance=request.user)
+    }
+    return render(request, 'authapp/profile.html',context)
+
+
 def logout(request):
     auth.logout(request)
-    return render('request', 'mainapp/index.html')
+    return render(request, 'mainapp/index.html')
