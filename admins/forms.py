@@ -1,7 +1,7 @@
 from django import forms
 from authapp.forms import UserRegisterForm, UserProfilerForm
 from authapp.models import User
-from mainapp.models import ProductCategory
+from mainapp.models import ProductCategory, Product
 
 
 class UserAdminRegisterForm(UserRegisterForm):
@@ -41,5 +41,16 @@ class CategoryAdminUpdateDelete(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(CategoryAdminUpdateDelete, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control py-4'
+
+
+class ProductAdminUpdateDelete(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ('category', 'name', 'image', 'short_desc', 'description', 'price', 'quantity')
+
+    def __init__(self, *args, **kwargs):
+        super(ProductAdminUpdateDelete, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control py-4'

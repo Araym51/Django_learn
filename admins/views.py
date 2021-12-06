@@ -6,7 +6,7 @@ from django.urls import reverse
 
 from admins.forms import UserAdminRegisterForm, UserAdminProfileForm, CategoryAdminUpdateDelete
 from authapp.models import User
-from mainapp.models import ProductCategory
+from mainapp.models import ProductCategory, Product
 
 app_name = 'admins'
 
@@ -87,3 +87,33 @@ def admin_category_update(request, pk):
         'category_select': category_select
     }
     return render(request, 'admins/admin-category-update-delete.html', context)
+
+
+def admin_category_delete(request, pk):  # НЕ РАБОТАЕТ! Исправить!
+    if request.method == 'POST':
+        category = ProductCategory.objects.get(pk=pk)
+        category.delete()
+        category.save()
+
+    return HttpResponseRedirect(reverse('admins:admin_category_read'))
+
+
+def admin_category_create(request):
+    if request.method == 'POST':
+        form = CategoryAdminUpdateDelete(data=request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('admins:admin_category_read'))
+    else:
+        form = CategoryAdminUpdateDelete()
+    context = {
+        'title': 'Geekshop - Admin | Category Create',
+        'form': form
+    }
+    return render(request, 'admins/admin-category-create.html', context)
+
+
+def admin_products_read(request):
+    context = {}
+    context['products'] = Product.objects.all()
+    return render(request, 'admins/admin-product-read.html', context)
