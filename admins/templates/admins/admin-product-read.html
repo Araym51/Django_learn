@@ -38,9 +38,9 @@
                                             </div>
                                         </td>
                                         <td>{{ product.quantity }}</td>
-                                        {#                                        <td><a href="{% url 'admins:product-update' pk=category.id %}">#}
-                                        {#                                            <input class="btn btn-success btn-block" type="submit" value="Изменить">#}
-                                        {#                                        </a></td>#}
+                                        <td><a href="{% url 'admins:product-update' pk=product.id %}">
+                                            <input class="btn btn-success btn-block" type="submit" value="Изменить">
+                                        </a></td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>

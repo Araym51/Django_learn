@@ -46,6 +46,8 @@ class CategoryAdminUpdateDelete(forms.ModelForm):
 
 
 class ProductAdminUpdateDelete(forms.ModelForm):
+    image = forms.ImageField(widget=forms.FileInput(), required=False)
+
     class Meta:
         model = Product
         fields = ('category', 'name', 'image', 'short_desc', 'description', 'price', 'quantity')
