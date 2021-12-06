@@ -4,8 +4,9 @@ from django.urls import reverse
 
 # Create your views here.
 
-from admins.forms import UserAdminRegisterForm, UserAdminProfileForm
+from admins.forms import UserAdminRegisterForm, UserAdminProfileForm, CategoryAdminUpdateDelete
 from authapp.models import User
+from mainapp.models import ProductCategory
 
 app_name = 'admins'
 
@@ -61,3 +62,28 @@ def admin_users_delete(request, pk):
         user.save()
 
     return HttpResponseRedirect(reverse('admins:admin_users'))
+
+
+def admin_category_read(request):
+
+    context = {
+        'categories':ProductCategory.objects.all()
+    }
+    return render(request, 'admins/admin-category-read.html', context)
+
+
+def admin_category_update(request, pk):
+    category_select = ProductCategory.objects.get(pk=pk)
+    if request.method == 'POST':
+        form = CategoryAdminUpdateDelete(data=request.POST, instance=category_select)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('admins:admin_category_read'))
+    else:
+        form = CategoryAdminUpdateDelete(instance=category_select)
+    context = {
+        'title': 'Geekshop - Admin | Category update/delete',
+        'form': form,
+        'category_select': category_select
+    }
+    return render(request, 'admins/admin-category-update-delete.html', context)

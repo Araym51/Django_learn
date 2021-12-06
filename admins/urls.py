@@ -1,15 +1,17 @@
 
 from django.urls import path
 
-from admins.views import index, admin_users, admin_users_create, admin_users_update, admin_users_delete
+from admins import views
 
 app_name = 'admins'
 
 urlpatterns = [
-    path('', index, name='index'),
-    path('users/', admin_users, name='admin_users'),
-    path('users-create/', admin_users_create, name='admin_users_create'),
-    path('users-update/<int:pk>', admin_users_update,name='admin_users_update'),
-    path('users-delete/<int:pk>', admin_users_delete,name='admin_users_delete'),
+    path('', views.index, name='index'),
+    path('users/', views.admin_users, name='admin_users'),
+    path('users-create/', views.admin_users_create, name='admin_users_create'),
+    path('users-update/<int:pk>', views.admin_users_update,name='admin_users_update'),
+    path('users-delete/<int:pk>', views.admin_users_delete,name='admin_users_delete'),
+    path('category-read/', views.admin_category_read, name='admin_category_read'),
+    path('category-update-delete/<int:pk>', views.admin_category_update, name='category-update' ),
 ]
 
