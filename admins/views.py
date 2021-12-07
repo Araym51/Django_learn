@@ -134,7 +134,7 @@ def admin_products_read(request):
 def admin_products_update(request, pk):
     product_select = Product.objects.get(pk=pk)
     if request.method == 'POST':
-        form = ProductAdminUpdateDelete(data=request.POST, instance=product_select)
+        form = ProductAdminUpdateDelete(data=request.POST, instance=product_select, files=request.FILES)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('admins:product-read'))
@@ -160,7 +160,7 @@ def admin_product_delete(request, pk):
 @user_passes_test(lambda u: u.is_superuser)
 def admin_product_create(request): # прописать в urls
     if request.method == 'POST':
-        form = ProductAdminUpdateDelete(data=request.POST)
+        form = ProductAdminUpdateDelete(data=request.POST, files=request.FILES)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('admins:product-read'))
