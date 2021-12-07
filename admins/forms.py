@@ -56,3 +56,4 @@ class ProductAdminUpdateDelete(forms.ModelForm):
         super(ProductAdminUpdateDelete, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control py-4'
+        # self.fields['category'].widget.attrs['class'] = 'related-widget-wrapper'
