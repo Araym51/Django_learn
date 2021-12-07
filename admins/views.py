@@ -98,10 +98,7 @@ def admin_category_update(request, pk):
 @user_passes_test(lambda u: u.is_superuser)
 def admin_category_delete(request, pk):  # НЕ РАБОТАЕТ! Исправить!
     if request.method == 'POST':
-        category = ProductCategory.objects.get(pk=pk)
-        category.delete()
-        category.save()
-
+        ProductCategory.objects.get(pk=pk).delete()
     return HttpResponseRedirect(reverse('admins:admin_category_read'))
 
 
@@ -151,9 +148,7 @@ def admin_products_update(request, pk):
 @user_passes_test(lambda u: u.is_superuser)
 def admin_product_delete(request, pk):
     if request.method == 'POST':
-        product = Product.objects.get(pk=pk)
-        product.delete()
-        product.save()
+        Product.objects.get(pk=pk).delete()
     return HttpResponseRedirect(reverse('admins:product-read'))
 
 
