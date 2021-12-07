@@ -20,7 +20,8 @@
                                     <th>Цена</th>
                                     <th>Фотография</th>
                                     <th>Количество</th>
-                                    <th>изменить</th>
+                                    <th>Изменить</th>
+                                    <th>Удалить</th>
                                 </tr>
                                 </thead>
 
@@ -41,6 +42,10 @@
                                         <td><a href="{% url 'admins:product-update' pk=product.id %}">
                                             <input class="btn btn-success btn-block" type="submit" value="Изменить">
                                         </a></td>
+                                        <td><a href="{% url 'admins:product-delete' product.id %}" method="post">
+                                            {% csrf_token %}
+                                            <input class="btn-danger" type="submit" value="Удалить">
+                                        </a></td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
@@ -48,9 +53,9 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        {#                        <a href="{% url 'admins:admin_users_create' %}">#}
-                        {#                            <button class="btn btn-success">Добавить продукт</button>#}
-                        {#                        </a>#}
+                        <a href="{% url 'admins:product-create' %}">
+                            <button class="btn btn-success">Добавить продукт</button>
+                        </a>
                     </div>
                 </div>
             </div>

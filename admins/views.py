@@ -137,3 +137,26 @@ def admin_products_update(request, pk):
         'product_select': product_select
     }
     return render(request, 'admins/admin-product-update-delete.html', context)
+
+
+def admin_product_delete(request, pk):
+    if request.method == 'POST':
+        product = Product.objects.get(pk=pk)
+        product.delete()
+        product.save()
+    return HttpResponseRedirect(reverse('admins:product-read'))
+
+
+def admin_product_create(request): # прописать в urls
+    if request.method == 'POST':
+        form = ProductAdminUpdateDelete(data=request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('admins:product-read'))
+    else:
+        form = ProductAdminUpdateDelete()
+    context = {
+        'title': 'Geekshop - Admin | Product create',
+        'form': form
+    }
+    return render(request, 'admins/admin-product-create.html', context)
