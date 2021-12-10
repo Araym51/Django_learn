@@ -13,10 +13,10 @@ urlpatterns = [
     path('users-update/<int:pk>', views.UserUpdateView.as_view(),name='admin_users_update'),
     path('users-delete/<int:pk>', views.UserDeleteView.as_view(),name='admin_users_delete'),
     # categories
-    path('category-read/', views.admin_category_read, name='admin_category_read'),
-    path('category-update/<int:pk>', views.admin_category_update, name='category-update' ),
-    path('category-delete/<int:pk>', views.admin_category_delete, name='category-delete' ),
-    path('category-create/', views.admin_category_create, name='category-create'),
+    path('category-read/', views.CategoryListView.as_view(), name='admin_category_read'),
+    path('category-update/<int:pk>', views.CategoryUpdateView.as_view(), name='category-update' ),
+    path('category-delete/<int:pk>', views.CategoryDeleteView.as_view(), name='category-delete' ),
+    path('category-create/', views.CategoryCreateView.as_view(), name='category-create'),
     # products
     path('product-read/', views.admin_products_read, name='product-read'),
     path('product-update/<int:pk>', views.admin_products_update, name='product-update'),
