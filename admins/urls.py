@@ -6,7 +6,7 @@ from admins import views
 app_name = 'admins'
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.IndexTemplateView.as_view(), name='index'),
     # users
     path('users/', views.UserListView.as_view(), name='admin_users'),
     path('users-create/', views.UserCreateView.as_view(), name='admin_users_create'),
