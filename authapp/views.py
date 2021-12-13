@@ -1,6 +1,7 @@
-from django.contrib import auth, messages
-from django.contrib.auth.decorators import login_required
+from django.conf import settings
+from django.contrib import messages, auth
 from django.contrib.auth.views import LoginView, LogoutView
+from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import FormView, UpdateView
@@ -29,14 +30,38 @@ class RegisterListView(FormView, BaseClassContextMixin):
     def post(self, request, *args, **kwargs):
         form = self.form_class(data=request.POST)
         if form.is_valid():
-            form.save()
-            messages.set_level(request, messages.SUCCESS)
-            messages.success(request, 'Вы успешно зарегистрировались!')
-            return HttpResponseRedirect(reverse('authapp:login'))
+            user = form.save()
+            if self.send_verify_user(user):
+                messages.set_level(request, messages.SUCCESS)
+                messages.success(request, 'Вы успешно зарегистрировались!')
+                return HttpResponseRedirect(reverse('authapp:login'))
+            else:
+                messages.set_level(request, messages.ERROR)
+                messages.error(request, form.errors)
         else:
             messages.set_level(request, messages.ERROR)
             messages.error(request, form.errors)
         return render(request, self.template_name, {'form': form})
+
+    def send_verify_user(self, user):
+        verify_link = reverse('authapp:verify', args=[user.email, user.activation_key])
+        subject = f'Для активации учетной записи {user.username} пройдите по ссылке'
+        message = f'Для подверждения ечетной записи {user.username} на портале {settings.DOMAIN_NAME} ' \
+                  f' пройдите по ссылке: \n {verify_link}'
+        return send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
+
+    def verify(self, email, activate_key):
+        try:
+            user = User.objects.get(email=email)
+            if user and user.activation_key == activate_key and not user.is_activation_key_expires():
+                user.activation_key = ''
+                user.activation_key_expires = None
+                user.is_active = True
+                user.save()
+                auth.login(self, user)
+            return render(self, 'authapp/verification.html')
+        except Exception as e:
+            return HttpResponseRedirect(reverse('index'))
 
 
 class ProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
@@ -46,7 +71,7 @@ class ProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
     title = 'GeekShop - Профиль'
 
     def form_valid(self, form):
-        messages.set_level(self.request,messages.SUCCESS)
+        messages.set_level(self.request, messages.SUCCESS)
         messages.success(self.request, "Вы успешно зарегистрировались")
         super().form_valid(form)
         return HttpResponseRedirect(self.get_success_url())
