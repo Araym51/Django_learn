@@ -22,7 +22,7 @@ window.onload = function () {
     }
     console.info('QUANTITY', quantity_arr)
     console.info('PRICE', price_arr)
-
+    //
     // 1метод
     $('.order_form').on('click', 'input[type=number]', function () {
 
@@ -48,7 +48,6 @@ window.onload = function () {
         }
         orderSummaryUpdate(price_arr[orderitem_num], delta_quantity);
     });
-
 
     function orderSummaryUpdate(orderitem_price, delta_quantity) {
         delta_cost = orderitem_price * delta_quantity;
@@ -93,21 +92,17 @@ window.onload = function () {
                         }
                         let price_html = '<span class="orderitems-' + orderitem_num + '-price">'
                             + data.price.toString().replace('.', ',') + '</span> руб';
-                        let current_tr = $('.order_form table').find('tr:eq('+(orderitem_num+1)+')');
+                        let current_tr = $('.order_form table').find('tr:eq(' + (orderitem_num + 1) + ')');
                         current_tr.find('td:eq(2)').html(price_html)
                     }
                 }
-
-
             })
         }
 
     })
 
-
-}
-
- $('.order_form select').change(function () {
+    // $('.order_form select').change(function () {
+    $(document).on('change', '.order_form select', function () {
 
         let target = event.target;
         orderitem_num = parseInt(target.name.replace('orderitems-', '').replace('-product', ''));
@@ -127,7 +122,7 @@ window.onload = function () {
                         }
                         let price_html = '<span class="orderitems-' + orderitem_num + '-price">'
                             + data.price.toString().replace('.', ',') + '</span> руб';
-                        let current_tr = $('.order_form table').find('tr:eq('+(orderitem_num+1)+')');
+                        let current_tr = $('.order_form table').find('tr:eq(' + (orderitem_num + 1) + ')');
                         current_tr.find('td:eq(2)').html(price_html)
                     }
                 }
@@ -137,3 +132,4 @@ window.onload = function () {
         }
 
     })
+}
