@@ -60,7 +60,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'geekshop.mid.DisableCSRFMiddleware'
+    'geekshop.mid.DisableCSRFMiddleware',
 ]
 
 ROOT_URLCONF = 'geekshop.urls'
