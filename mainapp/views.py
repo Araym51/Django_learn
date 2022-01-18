@@ -5,7 +5,7 @@ from django.views.generic import DetailView
 from mainapp.models import Product, ProductCategory
 import os
 from django.conf import settings
-from django.core import cache
+from django.core.cache import cache
 
 # Create your views here.
 
