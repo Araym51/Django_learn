@@ -18,6 +18,7 @@
                                 <tr>
                                     <th>Наименование</th>
                                     <th>Описание</th>
+                                    <th>скидка</th>
                                     <th>Удалить</th>
                                     <th>Изменить</th>
                                 </tr>
@@ -26,6 +27,7 @@
                                 <tr>
                                     <th>Наименование</th>
                                     <th>Описание</th>
+                                    <th>скидка</th>
                                     <th>Активный</th>
                                     <th>Изменить</th>
                                 </tr>
@@ -36,8 +38,10 @@
                                     <tr>
                                         <td>{{ category.name }}</td>
                                         <td>{{ category.description }}</td>
+                                        <td>{{ category.discount }}</td>
                                         <td>
-                                            <form action="{% url 'admins:category-delete' pk=category.id %}" method="post">
+                                            <form action="{% url 'admins:category-delete' pk=category.id %}"
+                                                  method="post">
                                                 {% csrf_token %}
                                                 <input class="btn btn-danger btn-block" type="submit" value="Удалить">
                                             </form>

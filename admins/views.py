@@ -67,6 +67,13 @@ class CategoryDeleteView(DeleteView, BaseClassContextMixin, CustomDispatchMixin)
     template_name = 'admins/admin-category-update-delete.html'
     success_url = reverse_lazy('admins:admin_category_read')
 
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.product_set.update(is_active=False)
+        self.object.is_active = False
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
 
 class CategoryUpdateView(UpdateView, BaseClassContextMixin, CustomDispatchMixin):
     model = ProductCategory
@@ -74,6 +81,14 @@ class CategoryUpdateView(UpdateView, BaseClassContextMixin, CustomDispatchMixin)
     form_class = CategoryAdminUpdateDelete
     title = 'Админка | Обновления категории'
     success_url = reverse_lazy('admins:admin_category_read')
+
+    def form_valid(self, form):
+        if 'discount' in form.cleaned_data:
+            discount = form.cleaned_data['discount']
+            if discount:
+                print(f'применяется скидка {discount}% к товарам категории {self.object.name}')
+                self.object.product_set.update(price=F('price')*(1-discount/100))
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class CategoryCreateView(CreateView,BaseClassContextMixin, CustomDispatchMixin):
