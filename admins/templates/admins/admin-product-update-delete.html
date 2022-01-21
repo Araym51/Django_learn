@@ -3,9 +3,9 @@
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid">
-                <h1 class="mt-4">Редактирование родукта | {{ product_select.name }}</h1>
+                <h1 class="mt-4">Редактирование родукта | {{ product.name }}</h1>
                 <div class="card-body">
-                    <form action="{% url 'admins:product-update' product_select.id %}" method="post" ,
+                    <form action="{% url 'admins:product-update' product.id %}" method="post"
                           enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="form-row">
@@ -33,8 +33,8 @@
 
                             <div class="col-lg-6 text-right">
                                 <img width="400" height="400"
-                                     src="{% if product_select.image %} {{ product_select.image.url }} {% endif %}"
-                                     class="img-thumbnail">
+                                     src="{% if product.image %} {{ product.image.url }} {% endif %}"
+                                     class="img-thumbnail" alt="Image">
                             </div>
                         </div>
                         <div class="form-row">
@@ -62,23 +62,23 @@
                             </div>
                         </div>
                     </form>
-                    {#                    <form action="{% url 'admins:admin_users_delete' user_select.id %}" method="post">#}
-                    {#                        {% csrf_token %}#}
-                    {#                        <div class="row">#}
-                    {#                            <div class="col-lg-12" style="margin-top: 33px;">#}
-                    {#                                <input class="btn btn-danger btn-block" type="submit" value="Удалить">#}
-                    {#                            </div>#}
+                    <form action="{% url 'admins:product-delete' product.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-12" style="margin-top: 33px;">
+                                <input class="btn btn-danger btn-block" type="submit" value="Удалить">
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                </form>
             </div>
-    </div>
-    </main>
-    <footer class="py-4 bg-light mt-auto">
-        <div class="container-fluid">
-            <div class="d-flex align-items-center justify-content-between small">
-                <div class="text-muted">Copyright &copy; GeekShop 2021</div>
+        </main>
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; GeekShop 2021</div>
+                </div>
             </div>
-        </div>
-    </footer>
+        </footer>
     </div>
 {% endblock %}
