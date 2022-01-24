@@ -39,8 +39,12 @@
                                             </div>
                                         </td>
                                         <td>{{ product.quantity }}</td>
-                                        <td><a href="{% url 'admins:product-update' pk=product.id %}">
-                                            <input class="btn btn-success btn-block" type="submit" value="Изменить"></a>
+                                        <td>
+                                            <div class="col-lg-12" style="margin-top: 33px;">
+                                                <a href="{% url 'admins:product-update' pk=product.id %}">
+                                                    <input class="btn btn-success btn-block" type="submit"
+                                                           value="Изменить"></a>
+                                            </div>
                                         </td>
                                         <td>
                                             <form action="{% url 'admins:product-delete' product.id %}"
