@@ -12,6 +12,7 @@ from admins.forms import UserAdminRegisterForm, UserAdminProfileForm, CategoryAd
 from authapp.models import User
 from mainapp.models import ProductCategory, Product
 from mainapp.mixin import BaseClassContextMixin, CustomDispatchMixin, UserDispatchMixin
+from django.db.models import F
 
 
 class IndexTemplateView(TemplateView, CustomDispatchMixin):
@@ -87,7 +88,7 @@ class CategoryUpdateView(UpdateView, BaseClassContextMixin, CustomDispatchMixin)
             discount = form.cleaned_data['discount']
             if discount:
                 print(f'применяется скидка {discount}% к товарам категории {self.object.name}')
-                self.object.product_set.update(price=F('price')*(1-discount/100))
+                self.object.product_set.update(price=F('price') * (1 - discount / 100))
         return HttpResponseRedirect(self.get_success_url())
 
 

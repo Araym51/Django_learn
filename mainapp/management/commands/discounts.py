@@ -3,8 +3,7 @@ from prettytable import PrettyTable
 
 from ordersapp.models import OrderItem
 from mainapp.models import Product
-from django.db.models import Q
-from django.db.models import F, When, Case, DecimalField, IntegerField
+from django.db.models import Q, F, When, Case, DecimalField, IntegerField
 from datetime import timedelta
 
 
