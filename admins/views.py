@@ -13,6 +13,7 @@ from authapp.models import User
 from mainapp.models import ProductCategory, Product
 from mainapp.mixin import BaseClassContextMixin, CustomDispatchMixin, UserDispatchMixin
 from django.db.models import F
+from django.views.decorators.cache import never_cache
 
 
 class IndexTemplateView(TemplateView, CustomDispatchMixin):
@@ -20,6 +21,7 @@ class IndexTemplateView(TemplateView, CustomDispatchMixin):
 
 
 # Users
+@never_cache
 class UserListView(ListView, BaseClassContextMixin, CustomDispatchMixin):
     model = User
     template_name = 'admins/admin-users-read.html'
@@ -57,6 +59,7 @@ class UserDeleteView(DeleteView, BaseClassContextMixin, CustomDispatchMixin):
 
 
 # Categories
+@never_cache
 class CategoryListView(ListView, BaseClassContextMixin, CustomDispatchMixin):
     model = ProductCategory
     template_name = 'admins/admin-category-read.html'
@@ -101,6 +104,7 @@ class CategoryCreateView(CreateView,BaseClassContextMixin, CustomDispatchMixin):
 
 
 #products
+@never_cache
 class ProductsListView(ListView, BaseClassContextMixin):
     model = Product
     template_name = 'admins/admin-product-read.html'
