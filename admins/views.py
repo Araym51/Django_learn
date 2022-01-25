@@ -58,7 +58,6 @@ class UserDeleteView(DeleteView, BaseClassContextMixin, CustomDispatchMixin):
 
 
 # Categories
-
 class CategoryListView(ListView, BaseClassContextMixin, CustomDispatchMixin):
     model = ProductCategory
     template_name = 'admins/admin-category-read.html'
@@ -89,8 +88,12 @@ class CategoryUpdateView(UpdateView, BaseClassContextMixin, CustomDispatchMixin)
         if 'discount' in form.cleaned_data:
             discount = form.cleaned_data['discount']
             if discount:
-                print(f'применяется скидка {discount}% к товарам категории {self.object.name}')
+                # print(f'применяется скидка {discount}% к товарам категории {self.object.name}')
                 self.object.product_set.update(price=F('price') * (1 - discount / 100))
+        if 'is_active' in form.cleaned_data:
+            is_active = form.cleaned_data['is_active']
+            if is_active:
+                self.object.save()
         return HttpResponseRedirect(self.get_success_url())
 
 
