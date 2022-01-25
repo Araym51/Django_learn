@@ -40,7 +40,7 @@ class CategoryAdminUpdateDelete(forms.ModelForm):
 
     class Meta:
         model = ProductCategory
-        fields = ('name', 'description', 'discount')
+        fields = ('name', 'description', 'discount', 'is_active')
 
     def __init__(self, *args, **kwargs):
         super(CategoryAdminUpdateDelete, self).__init__(*args, **kwargs)
@@ -53,7 +53,7 @@ class ProductAdminUpdateDelete(forms.ModelForm):
 
     class Meta:
         model = Product
-        fields = ('category', 'name', 'image', 'short_desc', 'description', 'price', 'quantity')
+        fields = ('category', 'name', 'image', 'short_desc', 'description', 'price', 'quantity', 'is_active')
 
     def __init__(self, *args, **kwargs):
         super(ProductAdminUpdateDelete, self).__init__(*args, **kwargs)

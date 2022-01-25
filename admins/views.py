@@ -120,6 +120,12 @@ class ProductDeleteView(DeleteView, BaseClassContextMixin):
     template_name = 'admins/admin-product-update-delete.html'
     success_url = reverse_lazy('admins:product-read')
 
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.is_active = False if self.object.is_active else True
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
 
 class ProductCreateView(CreateView, BaseClassContextMixin):
     model = Product
