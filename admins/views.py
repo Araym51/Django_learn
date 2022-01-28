@@ -12,6 +12,8 @@ from admins.forms import UserAdminRegisterForm, UserAdminProfileForm, CategoryAd
 from authapp.models import User
 from mainapp.models import ProductCategory, Product
 from mainapp.mixin import BaseClassContextMixin, CustomDispatchMixin, UserDispatchMixin
+from django.db.models import F
+from django.views.decorators.cache import never_cache
 
 
 class IndexTemplateView(TemplateView, CustomDispatchMixin):
@@ -67,6 +69,13 @@ class CategoryDeleteView(DeleteView, BaseClassContextMixin, CustomDispatchMixin)
     template_name = 'admins/admin-category-update-delete.html'
     success_url = reverse_lazy('admins:admin_category_read')
 
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.product_set.update(is_active=False)
+        self.object.is_active = False
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
 
 class CategoryUpdateView(UpdateView, BaseClassContextMixin, CustomDispatchMixin):
     model = ProductCategory
@@ -74,6 +83,18 @@ class CategoryUpdateView(UpdateView, BaseClassContextMixin, CustomDispatchMixin)
     form_class = CategoryAdminUpdateDelete
     title = 'Админка | Обновления категории'
     success_url = reverse_lazy('admins:admin_category_read')
+
+    def form_valid(self, form):
+        if 'discount' in form.cleaned_data:
+            discount = form.cleaned_data['discount']
+            if discount:
+                # print(f'применяется скидка {discount}% к товарам категории {self.object.name}')
+                self.object.product_set.update(price=F('price') * (1 - discount / 100))
+        if 'is_active' in form.cleaned_data:
+            is_active = form.cleaned_data['is_active']
+            if is_active:
+                self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class CategoryCreateView(CreateView,BaseClassContextMixin, CustomDispatchMixin):
@@ -103,6 +124,12 @@ class ProductDeleteView(DeleteView, BaseClassContextMixin):
     model = Product
     template_name = 'admins/admin-product-update-delete.html'
     success_url = reverse_lazy('admins:product-read')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.is_active = False if self.object.is_active else True
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class ProductCreateView(CreateView, BaseClassContextMixin):

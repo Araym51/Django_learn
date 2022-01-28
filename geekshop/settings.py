@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-3t+lotr7or_19^-24#84_y&-pgo56=6*op2t^xyw4q6e0pawl=
 from dotenv import load_dotenv
 load_dotenv(BASE_DIR / '.env')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False  # !!!
 
 ALLOWED_HOSTS = ['*']
 
@@ -199,7 +199,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.user.user_details',
 )
 
-if DEBUG:
+if DEBUG:  # не забыть включить обратно
    def show_toolbar(request):
        return True
 

@@ -2,7 +2,7 @@ from django.db import transaction
 from django.db.models.signals import pre_save, pre_delete
 from django.dispatch import receiver
 from django.forms import inlineformset_factory
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
@@ -10,14 +10,15 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
 
 from baskets.models import Basket
+from mainapp.mixin import BaseClassContextMixin
+from mainapp.models import Product
 from ordersapp.forms import OrderForm, OrderItemsForm
 from ordersapp.models import Order, OrderItem
-from mainapp.mixin import BaseClassContextMixin
 
 
-class OrderList(ListView):
+class OrderList(ListView, BaseClassContextMixin):
     model = Order
-    title = 'Geekshop | Список заказов'
+    title = 'GeekShop | Список заказов'
 
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user, is_active=True)
@@ -36,7 +37,7 @@ class OrderCreate(CreateView, BaseClassContextMixin):
         if self.request.POST:
             formset = OrderFormSet(self.request.POST)
         else:
-            basket_item = Basket.objects.filter(user=self.request.user)
+            basket_item = Basket.objects.filter(user=self.request.user).select_related()
             if basket_item:
                 OrderFormSet = inlineformset_factory(Order, OrderItem, form=OrderItemsForm, extra=basket_item.count())
                 formset = OrderFormSet()
@@ -64,7 +65,6 @@ class OrderCreate(CreateView, BaseClassContextMixin):
             if self.object.get_total_cost() == 0:
                 self.object.delete()
         return super(OrderCreate, self).form_valid(form)
-
 
 
 class OrderUpdate(UpdateView):
@@ -105,12 +105,12 @@ class OrderUpdate(UpdateView):
 class OrderDelete(DeleteView, BaseClassContextMixin):
     model = Order
     success_url = reverse_lazy('orders:list')
-    title = 'Geekshop | Удаление заказа'
+    title = 'GeekShop | Удаление заказа'
 
 
 class OrderDetail(DetailView, BaseClassContextMixin):
     model = Order
-    title = 'Geekshop | Просмотр заказа'
+    title = 'GeekShop | Просмотр заказа'
 
 
 def order_forming_complete(request, pk):
@@ -120,21 +120,27 @@ def order_forming_complete(request, pk):
     return HttpResponseRedirect(reverse('orders:list'))
 
 
-# Сигналы:
-# @receiver(pre_save, sender=Basket)
-# @receiver(pre_save, sender=OrderItem)
-# def product_quantity_update_save(sender, instance, **kwargs):
-#     if instance.pk:
-#         get_item = instance.get_item(int(instance.pk))
-#         instance.product.quantity -= instance.quantity - get_item
-#     else:
-#         instance.product.quantity -= instance.quantity
-#     instance.product.save()
-#
-#
-# @receiver(pre_delete, sender=Basket)
-# @receiver(pre_delete, sender=OrderItem)
-# def product_quantity_update_delete(sender, instance, **kwargs):
-#     instance.product.quantity += instance.quantity
-#     instance.product.save()
+def get_product_price(request, pk):
+    if request.is_ajax():
+        product = Product.objects.get(pk=pk)
+        if product:
+            return JsonResponse({'price': product.price})
+        return JsonResponse({'price': 0})
 
+# Сигналы:
+@receiver(pre_save, sender=Basket)
+@receiver(pre_save, sender=OrderItem)
+def product_quantity_update_save(sender, instance, **kwargs):
+    if instance.pk:
+        get_item = instance.get_item(int(instance.pk))
+        instance.product.quantity -= instance.quantity - get_item
+    else:
+        instance.product.quantity -= instance.quantity
+    instance.product.save()
+
+
+@receiver(pre_delete, sender=Basket)
+@receiver(pre_delete, sender=OrderItem)
+def product_quantity_update_delete(sender, instance, **kwargs):
+    instance.product.quantity += instance.quantity
+    instance.product.save()
